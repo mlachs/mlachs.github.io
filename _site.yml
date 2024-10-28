@@ -1,0 +1,14 @@
+name: "Home"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "Resume"
+      href: resume.html
+    - icon: fa-envelope fa-lg
+      href: mailto:<mrose.lachs@gmail.com>
+    - icon: fa-github fa-lg
+      href: http://github.com/mlachs/
+output:
+  html_document:
+    theme: cosmo
