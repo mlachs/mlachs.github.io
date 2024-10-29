@@ -1,0 +1,71 @@
+---
+title: "Example Dashboard with NOAA"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+
+```
+
+
+```{r}
+data("ny_noaa")
+```
+
+```{r}
+noaa=ny_noaa %>%
+  mutate(
+    day=day(date),
+    month=month.abb[month(date)],
+    year=year(date),
+    prcp=prcp/10,
+    tmax=as.numeric(tmax)/10,
+    tmin=as.numeric(tmin)/10) %>% 
+  filter(month %in% c('Mar','Jun','Sep','Dec')) %>% 
+  mutate(month=fct_relevel(month,'Mar','Jun','Sep','Dec'))
+
+ 
+
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Tempature min vs Teperature Max of season starting months
+
+```{r}
+noaa %>% 
+ ggplot(aes(x = tmin, y = tmax)) + 
+  geom_hex()+facet_wrap(~month)
+   
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Average t_max over the years for season starting months
+
+```{r}
+noaa %>% 
+    group_by(month,year) %>% 
+      summarize(mean_tmax = mean(tmax, na.rm = TRUE, color = id)) %>% 
+    ggplot(aes(x = year, y = mean_tmax)) + geom_point()+facet_wrap(~month)  
+```
+
+### Snow distrobution for season starting months 
+
+```{r}
+noaa %>% 
+  filter(snow>0) %>% 
+  ggplot(aes(x=month,y=snow))+geom_boxplot()
+  
+  
+```
+

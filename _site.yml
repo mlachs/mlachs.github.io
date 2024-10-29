@@ -5,6 +5,8 @@ navbar:
   right:
     - text: "Resume"
       href: resume.html
+    - icon: fa-solid fa-chart-line
+      href: noaa_dash.html
     - icon: fa-envelope fa-lg
       href: mailto:<mrose.lachs@gmail.com>
     - icon: fa-github fa-lg
