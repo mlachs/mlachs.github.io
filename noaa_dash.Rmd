@@ -10,6 +10,7 @@ output:
 library(flexdashboard)
 library(tidyverse)
 library(p8105.datasets)
+library(plotly)
 
 ```
 
@@ -38,12 +39,13 @@ noaa=ny_noaa %>%
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Tempature min vs Teperature Max of season starting months
+### Tmax distrobution for season starting months
 
 ```{r}
+
 noaa %>% 
- ggplot(aes(x = tmin, y = tmax)) + 
-  geom_hex()+facet_wrap(~month)
+  plot_ly(x=~month, y=~tmax,color= ~month,type = "box")
+
    
 ```
 
@@ -54,17 +56,20 @@ Column {data-width=350}
 
 ```{r}
 noaa %>% 
-    group_by(month,year) %>% 
-      summarize(mean_tmax = mean(tmax, na.rm = TRUE, color = id)) %>% 
-    ggplot(aes(x = year, y = mean_tmax)) + geom_point()+facet_wrap(~month)  
+  group_by(month,year) %>% 
+  summarize(mean_tmax = mean(tmax, na.rm = TRUE, color = id)) %>% 
+  plot_ly( x=~year,y=~mean_tmax, color = ~month, type = "scatter", mode = "line",alpha = 0.5)
 ```
 
-### Snow distrobution for season starting months 
+### Average snow for season starting months
 
 ```{r}
-noaa %>% 
-  filter(snow>0) %>% 
-  ggplot(aes(x=month,y=snow))+geom_boxplot()
+
+  noaa %>% 
+  group_by(month) %>% 
+  mutate(avg_snow=mean(snow,na.rm = TRUE)) %>% 
+  distinct(month,avg_snow) %>% 
+  plot_ly(x=~month,y=~avg_snow, color = ~month, type ='bar')
   
   
 ```
